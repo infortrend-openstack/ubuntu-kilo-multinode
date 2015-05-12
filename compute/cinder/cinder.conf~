@@ -1,0 +1,60 @@
+[DEFAULT]
+verbose = True
+rootwrap_config = /etc/cinder/rootwrap.conf
+api_paste_confg = /etc/cinder/api-paste.ini
+iscsi_helper = tgtadm
+volume_name_template = volume-%s
+volume_group = cinder-volumes
+verbose = True
+auth_strategy = keystone
+state_path = /var/lib/cinder
+lock_path = /var/lock/cinder
+volumes_dir = /var/lib/cinder/volumes
+rpc_backend = rabbit
+my_ip = 20.20.20.3
+
+default_volume_type = infortrenddriver-2
+enabled_backends = infortrenddriver-2
+glance_host = controller
+
+[database]
+connection = mysql://cinder:111111@controller/cinder
+
+[oslo_messaging_rabbit]
+rabbit_host = controller
+rabbit_userid = openstack
+rabbit_password = 111111
+
+[keystone_authtoken]
+auth_uri = http://controller:5000
+auth_url = http://controller:35357
+auth_plugin = password
+project_domain_id = default
+user_domain_id = default
+project_name = service
+username = cinder
+password = 111111
+
+[infortrenddriver-1]
+volume_driver = cinder.volume.drivers.infortrend.infortrend_fc_cli.InfortrendCLIFCDriver
+volume_backend_name = infortrenddriver-1
+infortrend_pools_name = LV-1
+san_login = infortrend
+san_ip = 172.27.117.201
+infortrend_slots_a_channels_id = 4,5
+infortrend_slots_b_channels_id = 4,5
+
+
+[infortrenddriver-2]
+volume_driver = cinder.volume.drivers.infortrend.infortrend_iscsi_cli.InfortrendCLIISCSIDriver
+volume_backend_name = infortrenddriver-2
+infortrend_pools_name = LV-1
+san_login = infortrend
+san_ip = 172.27.117.201
+infortrend_slots_a_channels_id = 4,5
+infortrend_slots_b_channels_id = 4,5
+use_multipath_for_image_xfer=True
+
+
+[oslo_concurrency]
+lock_path = /var/lock/cinder 

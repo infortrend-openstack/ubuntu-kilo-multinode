@@ -1,0 +1,40 @@
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+auto br-ex
+iface br-ex inet static
+address 172.27.117.101
+netmask 255.255.240.0 
+gateway 172.27.127.254
+dns-nameservers 8.8.8.8
+
+## external
+# The primary network interface
+auto eth0
+iface eth0 inet manual
+up ifconfig $IFACE 0.0.0.0 up
+up ip link set $IFACE promisc on
+down ip link set $IFACE promisc off
+down ifconfig $IFACE down
+
+#iface eth0 inet static
+#address 172.27.117.101
+#netmask 255.255.240.0
+#gateway 172.27.127.254
+#dns-nameservers 8.8.8.8
+
+## management
+auto p5p1
+iface p5p1 inet static
+address 20.20.20.1
+netmask 255.255.255.0
+
+## tunnel
+auto p262p1
+iface p262p1 inet static
+address 30.30.30.1
+netmask 255.255.255.0

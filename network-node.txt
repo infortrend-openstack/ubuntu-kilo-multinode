@@ -1,0 +1,72 @@
+* setup networking
+	# sudo su
+	# vim /etc/network/interfaces
+		XXX
+	# vim /etc/hosts
+		XXX
+		
+* install package
+	# sudo su
+	# apt-get install ubuntu-cloud-keyring
+	# echo "deb http://ubuntu-cloud.archive.canonical.com/ubuntu" "trusty-updates/kilo main" > /etc/apt/sources.list.d/cloudarchive-kilo.list
+	# apt-get update && apt-get dist-upgrade
+	# reboot
+	
+* install Neutron
+	# sudo su
+	# cp /etc/sysctl.conf /etc/sysctl.conf~
+	# vim /etc/sysctl.conf
+		XXX
+	# sysctl -p
+	Install Neutron
+	# apt-get install neutron-plugin-ml2 neutron-plugin-openvswitch-agent neutron-l3-agent neutron-dhcp-agent neutron-metadata-agent
+	# cp /etc/neutron/neutron.conf /etc/neutron/neutron.conf~
+	# vim /etc/neutron/neutron.conf
+		XXX
+	# cp /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugins/ml2/ml2_conf.ini~
+	# vim /etc/neutron/plugins/ml2/ml2_conf.ini
+		XXX
+	# cp /etc/neutron/l3_agent.ini /etc/neutron/l3_agent.ini
+	# vim /etc/neutron/l3_agent.ini
+		XXX
+	# cp /etc/neutron/dhcp_agent.ini /etc/neutron/dhcp_agent.ini~
+	# vim /etc/neutron/dhcp_agent.ini
+		XXX
+	# cp /etc/neutron/dnsmasq-neutron.conf /etc/neutron/dnsmasq-neutron.conf~
+	# vim /etc/neutron/dnsmasq-neutron.conf
+		XXX
+	# pkill dnsmasq
+	# cp /etc/neutron/metadata_agent.ini /etc/neutron/metadata_agent.ini~
+	# vim /etc/neutron/metadata_agent.ini
+		XXX
+	On controller node
+		# vim /etc/nova/nova.conf
+			XXX
+		# service nova-api restart
+	Back to network node
+	# service openvswitch-switch restart
+	# ovs-vsctl add-br br-ex
+	# ovs-vsctl add-port br-ex INTERFACE_NAME
+		INTERFACE_NAME is external network interface on Network node
+	# ethtool -K INTERFACE_NAME gro off
+	# service neutron-plugin-openvswitch-agent restart
+	# service neutron-l3-agent restart
+	# service neutron-dhcp-agent restart
+	# service neutron-metadata-agent restart
+	Verify on Controller Node
+	# source /root/admin-openrc.sh
+	# neutron agent-list
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

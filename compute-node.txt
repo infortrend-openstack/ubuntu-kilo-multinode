@@ -1,0 +1,62 @@
+* setup networking
+	# sudo su
+	# vim /etc/network/interfaces
+		XXX
+	# vim /etc/hosts
+		XXX
+	
+* install package
+	# sudo su
+	# apt-get install ubuntu-cloud-keyring
+	# echo "deb http://ubuntu-cloud.archive.canonical.com/ubuntu" "trusty-updates/kilo main" > /etc/apt/sources.list.d/cloudarchive-kilo.list
+	# apt-get update && apt-get dist-upgrade
+	# reboot
+	
+# install Nova
+	# sudo su
+	Install Nova
+	# apt-get install nova-compute sysfsutils
+	# cp /etc/nova/nova.conf /etc/nova/nova.conf~
+	# vim /etc/nova/nova.conf
+		XXX
+	# egrep -c '(vmx|svm)' /proc/cpuinfo
+		=> check output if 1 => modify "kvm" to "qemu" in /etc/nova/nova-compute.conf
+	# service nova-compute restart
+	# rm -f /var/lib/nova/nova.sqlite
+
+* install Neutron
+	# cp /etc/sysctl.conf /etc/sysctl.conf~
+	# vim /etc/sysctl.conf
+		XXX
+	# sysctl -p
+	Install Neutron
+	# apt-get install neutron-plugin-ml2 neutron-plugin-openvswitch-agent
+	# cp /etc/neutron/neutron.conf /etc/neutron/neutron.conf~
+	# vim /etc/neutron/neutron.conf
+		XXX
+	# cp /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugins/ml2/ml2_conf.ini
+	# vim /etc/neutron/plugins/ml2/ml2_conf.ini
+		XXX
+	# service openvswitch-switch restart
+	# vim /etc/nova/nova.conf
+		XXX
+	# service nova-compute restart
+	# service neutron-plugin-openvswitch-agent restart
+	Verify on Controller Node
+	# source /root/admin-openrc.sh
+	# neutron agent-list
+
+* install Cinder
+	Install Cinder
+	# apt-get install cinder-volume python-mysqldb
+	# cp /etc/cinder/cinder.conf /etc/cinder/cinder.conf~
+	# vim /etc/cinder/cinder.conf  
+		XXX
+	# service tgt restart
+	# service cinder-volume restart
+	# rm -f /var/lib/cinder/cinder.sqlite
+
+	
+	
+	
+	

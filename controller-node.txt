@@ -1,0 +1,250 @@
+* setup networking
+	# sudo su
+	# vim /etc/network/interfaces
+		XXX
+	# vim /etc/hosts
+		XXX
+
+* install package
+	# sudo su
+	# apt-get install ubuntu-cloud-keyring
+	# echo "deb http://ubuntu-cloud.archive.canonical.com/ubuntu" "trusty-updates/kilo main" > /etc/apt/sources.list.d/cloudarchive-kilo.list
+	# apt-get update && apt-get dist-upgrade
+	# reboot
+
+* install SQL database
+	# sudo su
+	# apt-get install mariadb-server python-mysqldb
+		setup suitable password for database root account 
+		=> NOTICE: here I use '111111' for ALL password
+	# cp /etc/mysql/conf.d/mysqld_openstack.cnf /etc/mysql/conf.d/mysqld_openstack.cnf~
+	# vim /etc/mysql/conf.d/mysqld_openstack.cnf  
+		XXX
+	# service mysql restart
+	# mysql_secure_installation 
+		press Y for all selection
+	
+* install Message Queue
+	# curl -O https://www.rabbitmq.com/rabbitmq-signing-key-public.asc
+	# apt-key add rabbitmq-signing-key-public.asc
+	# echo "deb http://www.rabbitmq.com/debian/ testing main" > /etc/apt/sources.list.d/rabbitmq.list
+	# apt-get update
+	# apt-get install rabbitmq-server
+	# rabbitmqctl add_user openstack 111111
+	# rabbitmqctl set_permissions openstack ".*" ".*" ".*"
+
+* install Keystone
+	# mysql -u root -p
+	MariaDB [(none)]> CREATE DATABASE keystone;
+	MariaDB [(none)]> GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY '111111';
+	MariaDB [(none)]> GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY '111111';
+	MariaDB [(none)]> exit
+	# openssl rand -hex 10 
+		[1]store this variable as token used
+	# echo "manual" > /etc/init/keystone.override
+	# apt-get install keystone python-openstackclient apache2 libapache2-mod-wsgi memcached python-memcache 
+	# cp /etc/keystone/keystone.conf /etc/keystone/keystone.conf~
+	# vim /etc/keystone/keystone.conf
+		XXX
+	# su -s /bin/sh -c "keystone-manage db_sync" keystone
+	# cp /etc/apache2/apache2.conf /etc/apache2/apache2.conf~
+	# vim /etc/apache2/apache2.conf
+		XXX
+	# vim /etc/apache2/sites-available/wsgi-keystone.conf
+		XXX
+	# rm /etc/apache2/sites-enabled/000-default.conf
+	# ln -s /etc/apache2/sites-available/wsgi-keystone.conf /etc/apache2/sites-enabled
+	# mkdir -p /var/www/cgi-bin/keystone
+	# curl http://git.openstack.org/cgit/openstack/keystone/plain/httpd/keystone.py?h=stable/kilo | tee /var/www/cgi-bin/keystone/main /var/www/cgi-bin/keystone/admin
+	# chown -R keystone:keystone /var/www/cgi-bin/keystone
+	# chmod 755 /var/www/cgi-bin/keystone/*
+	# service apache2 restart
+	# rm -f /var/lib/keystone/keystone.db
+	# export OS_TOKEN= [1]
+		Notice use [1] hex value, For example: export OS_TOKEN=294a4c8a8a475f9b9836
+	# export OS_URL=http://controller:35357/v2.0
+	# openstack service create --type identity --description "OpenStack Identity" keystone
+	# openstack endpoint create --publicurl http://controller:5000/v2.0 --internalurl http://controller:5000/v2.0 --adminurl http://controller:35357/v2.0 --region RegionOne identity
+	# openstack project create --description "Admin Project" admin
+	# openstack user create --password-prompt admin
+		=> enter password '111111'
+	# openstack role create admin
+	# openstack role add --project admin --user admin admin
+	# openstack project create --description "Service Project" service
+	# openstack project create --description "Demo Project" demo
+	# openstack user create --password-prompt demo
+		=> enter password '111111'
+	# openstack role create _member_
+	# openstack role add --project demo --user demo _member_
+	# cp /etc/keystone/keystone-paste.ini /etc/keystone/keystone-paste.ini~
+	Verify operations
+	# vim /etc/keystone/keystone-paste.ini
+		XXX
+	# unset OS_TOKEN OS_URL
+	# openstack --os-auth-url http://controller:35357 --os-project-name admin --os-username admin --os-auth-type password token issue
+		=> enter password '111111'
+	# openstack --os-auth-url http://controller:35357 --os-project-domain-id default --os-user-domain-id default --os-project-name admin --os-username admin --os-auth-type password token issue
+		=> enter password '111111'
+	# openstack --os-auth-url http://controller:35357 --os-project-name admin --os-username admin --os-auth-type password project list
+		=> enter password '111111'
+	# openstack --os-auth-url http://controller:35357 --os-project-name admin --os-username admin --os-auth-type password user list 
+		=> enter password '111111'
+	# openstack --os-auth-url http://controller:35357 --os-project-name admin --os-username admin --os-auth-type password role list
+		=> enter password '111111'
+	# openstack --os-auth-url http://controller:5000 --os-project-domain-id default --os-user-domain-id default --os-project-name demo --os-username demo --os-auth-type password token issue
+		=> enter password '111111'
+	# openstack --os-auth-url http://controller:5000 --os-project-domain-id default --os-user-domain-id default --os-project-name demo --os-username demo --os-auth-type password user list
+		=> enter password '111111' => ERROR: openstack You are not authorized to perform the requested action, admin_required. (HTTP 403)
+	Create Environment scripts
+	# vim /root/admin-openrc.sh
+		XXX
+	# vim /root/demo-openrc.sh
+		XXX
+	Varify operations
+	# source /root/admin-openrc.sh
+	# openstack token issue
+		=> show token field and value
+
+* install Glance
+	# mysql -u root -p
+	MariaDB [(none)]> CREATE DATABASE glance;
+	MariaDB [(none)]> GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' IDENTIFIED BY '111111';
+	MariaDB [(none)]> GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' IDENTIFIED BY '111111';
+	MariaDB [(none)]> exit
+	# source /root/admin-openrc.sh
+	# openstack user create --password-prompt glance
+		=> enter password '111111'
+	# openstack role add --project service --user glance admin
+	# openstack service create --type image --description "OpenStack Image service" glance
+	# openstack endpoint create --publicurl http://controller:9292 --internalurl http://controller:9292 --adminurl http://controller:9292 --region RegionOne image
+	Install glance
+	# apt-get install glance python-glanceclient
+	# cp /etc/glance/glance-api.conf /etc/glance/glance-api.conf~
+	# vim /etc/glance/glance-api.conf
+		XXX
+	# cp /etc/glance/glance-registry.conf /etc/glance/glance-registry.conf~
+	# vim /etc/glance/glance-registry.conf
+	# su -s /bin/sh -c "glance-manage db_sync" glance
+	# service glance-registry restart
+	# service glance-api restart
+	# rm -f /var/lib/glance/glance.sqlite
+	Varify operations
+	# echo "export OS_IMAGE_API_VERSION=2" | tee -a /root/admin-openrc.sh /root/demo-openrc.sh
+	# source /root/admin-openrc.sh
+	# mkdir /tmp/images
+	# wget -P /tmp/images http://download.cirros-cloud.net/0.3.3/cirros-0.3.3-x86_64-disk.img 
+	# glance image-create --name "cirros-0.3.3-x86_64" --file /tmp/images/cirros-0.3.3-x86_64-disk.img --disk-format qcow2 --container-format bare --visibility public --progress
+	# glance image-list
+	# rm -r /tmp/images
+	
+* install Nova
+	# mysql -u root -p
+		=> enter password '111111'
+	MariaDB [(none)]> CREATE DATABASE nova;
+	MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'localhost' IDENTIFIED BY '111111';
+	MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' IDENTIFIED BY '111111';
+	MariaDB [(none)]> exit
+	# source /root/admin-openrc.sh
+	# openstack user create --password-prompt nova
+		=> enter password '111111'
+	# openstack role add --project service --user nova admin
+	# openstack service create --type compute --description "OpenStack Compute" nova 
+	# openstack endpoint create --publicurl http://controller:8774/v2/%\(tenant_id\)s --internalurl http://controller:8774/v2/%\(tenant_id\)s --adminurl http://controller:8774/v2/%\(tenant_id\)s --region RegionOne compute
+	Install Nova
+	# apt-get install nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient
+	# cp /etc/nova/nova.conf /etc/nova/nova.conf~
+	# vim /etc/nova/nova.conf
+		XXX
+	# su -s /bin/sh -c "nova-manage db sync" nova
+	# service nova-api restart
+	# service nova-cert restart
+	# service nova-consoleauth restart
+	# service nova-scheduler restart
+	# service nova-conductor restart
+	# service nova-novncproxy restart
+	# rm -f /var/lib/nova/nova.sqlite
+	Verify operations, NOTICE: Need to after setup NOVA on Compute node 
+	# source /root/admin-openrc.sh
+	# nova service-list
+	# nova endpoints
+	# nova image-list
+
+* install Neutron
+	# mysql -u root -p
+		=> enter password '111111'
+	MariaDB [(none)]> CREATE DATABASE neutron;
+	MariaDB [(none)]> GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'localhost' IDENTIFIED BY '111111';
+	MariaDB [(none)]> GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'%' IDENTIFIED BY '111111';
+	MariaDB [(none)]> exit
+	# source /root/admin-openrc.sh
+	# openstack user create --password-prompt neutron
+		=> enter password '111111'
+	# openstack role add --project service --user neutron admin
+	# openstack service create --type network --description "OpenStack Networking" neutron
+	# openstack endpoint create --publicurl http://controller:9696 --adminurl http://controller:9696 --internalurl http://controller:9696 --region RegionOne network
+	Install Neutron
+	# apt-get install neutron-server neutron-plugin-ml2 python-neutronclient
+	# cp /etc/neutron/neutron.conf /etc/neutron/neutron.conf~
+	# vim /etc/neutron/neutron.conf
+		XXX
+	# cp /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugins/ml2/ml2_conf.ini~
+	# vim /etc/neutron/plugins/ml2/ml2_conf.ini
+		XXX
+	# vim /etc/nova/nova.conf
+		XXX
+	# su -s /bin/sh -c "neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head" neutron
+	# service nova-api restart
+	# service neutron-server restart
+	Verify operations
+	# source /root/admin-openrc.sh
+	# neutron ext-list
+	
+* add DashBoard
+	Install Horizon
+	# apt-get install openstack-dashboard
+	# cp /etc/openstack-dashboard/local_settings.py /etc/openstack-dashboard/local_settings.py~
+	# vim /etc/openstack-dashboard/local_settings.py
+		XXX
+	# service apache2 reload
+	Verify operations
+	1. Access the dashboard using a web browser: http://controller/horizon
+	2. Authenticate using admin or demo user credentials
+	
+* create Initial Networking
+
+* install Cinder
+	# mysql -u root -p
+	MariaDB [(none)]> CREATE DATABASE cinder;
+	MariaDB [(none)]> GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'localhost' IDENTIFIED BY '111111';
+	MariaDB [(none)]> GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'%' IDENTIFIED BY '111111';
+	MariaDB [(none)]> exit
+	# source /root/admin-openrc.sh
+	# openstack user create --password-prompt cinder
+		=> enter password '111111'
+	# openstack role add --project service --user cinder admin
+	# openstack service create --type volume --description "OpenStack Block Storage" cinder 
+	# openstack service create --type volumev2 --description "OpenStack Block Storage" cinderv2
+	# openstack endpoint create --publicurl http://controller:8776/v2/%\(tenant_id\)s --internalurl http://controller:8776/v2/%\(tenant_id\)s --adminurl http://controller:8776/v2/%\(tenant_id\)s --region RegionOne volume
+	# openstack endpoint create --publicurl http://controller:8776/v2/%\(tenant_id\)s --internalurl http://controller:8776/v2/%\(tenant_id\)s --adminurl http://controller:8776/v2/%\(tenant_id\)s --region RegionOne volumev2
+	Install Cinder
+	# apt-get install cinder-api cinder-scheduler python-cinderclient
+	# cp /etc/cinder/cinder.conf /etc/cinder/cinder.conf~
+	# vim /etc/cinder/cinder.conf
+		XXX
+	# su -s /bin/sh -c "cinder-manage db sync" cinder
+	# service cinder-scheduler restart
+	# service cinder-api restart
+	# rm -f /var/lib/cinder/cinder.sqlite
+	Verify operations
+	=> use Horizon or Cinder CLI do it
+	
+* launch VM
+	=> use Horizon or Nova CLI do it
+	
+
+	
+	
+	
+	
+	
+	
