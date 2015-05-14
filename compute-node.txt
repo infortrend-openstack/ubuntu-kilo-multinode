@@ -1,3 +1,9 @@
+NOTICE: ubuntu 14.10 is not work, because some package dependancy on libvirt not work!
+	=> Setup Compute node on ubuntu 14.04 is OK!
+
+! => means need to modify some parameters
+XXX => means need to modify with manual, you can also check with corresponding directory! :)
+
 * setup networking
 	# sudo su
 	# vim /etc/network/interfaces

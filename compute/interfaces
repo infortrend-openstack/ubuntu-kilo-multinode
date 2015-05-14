@@ -1,4 +1,4 @@
-# interfaces(5) file used by ifup(8) and ifdown(8)
+# The loopback network interface
 auto lo
 iface lo inet loopback
 
@@ -11,7 +11,7 @@ gateway 172.27.127.254
 dns-nameservers 8.8.8.8
 
 ## management net
-auto eth3
+auto eth1
 iface eth3 inet static
 address 20.20.20.3
 netmask 255.255.255.0
@@ -22,8 +22,4 @@ iface eth2 inet static
 address 30.30.30.3
 netmask 255.255.255.0
 
-# iscsi initiator for RAID
-#auto eth7
-#iface eth7 inet static
-#address 50.0.0.100
-#netmask 255.255.255.0
+## storage net

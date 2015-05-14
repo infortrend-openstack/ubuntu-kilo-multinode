@@ -1,3 +1,6 @@
+! => means need to modify some parameters
+XXX => means need to modify with manual, you can also check with corresponding directory! :)
+
 * setup networking
 	# sudo su
 	# vim /etc/network/interfaces
@@ -60,7 +63,7 @@
 	# chmod 755 /var/www/cgi-bin/keystone/*
 	# service apache2 restart
 	# rm -f /var/lib/keystone/keystone.db
-	# export OS_TOKEN= [1]
+	!# export OS_TOKEN= [1]
 		Notice use [1] hex value, For example: export OS_TOKEN=294a4c8a8a475f9b9836
 	# export OS_URL=http://controller:35357/v2.0
 	# openstack service create --type identity --description "OpenStack Identity" keystone
@@ -124,6 +127,7 @@
 		XXX
 	# cp /etc/glance/glance-registry.conf /etc/glance/glance-registry.conf~
 	# vim /etc/glance/glance-registry.conf
+		XXX
 	# su -s /bin/sh -c "glance-manage db_sync" glance
 	# service glance-registry restart
 	# service glance-api restart
@@ -211,7 +215,20 @@
 	2. Authenticate using admin or demo user credentials
 	
 * create Initial Networking
-
+	# neutron net-create ext-net --router:external --provider:physical_network external --provider:network_type flat
+	!# neutron subnet-create ext-net 172.27.117.0/20 --name ext-subnet --allocation-pool start=172.27.117.200,end=172.27.117.250 --disable-dhcp --gateway 172.27.127.254 --dns-nameserver 8.8.8.8
+	Admin private network 
+		=> Do it by Web UI
+	Demo private network (from guide)
+	# source /root/demo-openrc.sh
+	# neutron net-create demo-net
+	!# neutron subnet-create demo-net 10.10.10.0/24 --name demo-subnet --gateway 10.10.10.1
+	# neutron router-create demo-router
+	# neutron router-interface-add demo-router demo-subnet
+	# neutron router-gateway-set demo-router ext-net
+	Verify connection
+	!# ping -c 4 10.10.10.1
+	
 * install Cinder
 	# mysql -u root -p
 	MariaDB [(none)]> CREATE DATABASE cinder;

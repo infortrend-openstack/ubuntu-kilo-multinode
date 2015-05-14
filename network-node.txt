@@ -1,3 +1,6 @@
+! => means need to modify some parameters
+XXX => means need to modify with manual, you can also check with corresponding directory! :)
+
 * setup networking
 	# sudo su
 	# vim /etc/network/interfaces
@@ -26,13 +29,12 @@
 	# cp /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugins/ml2/ml2_conf.ini~
 	# vim /etc/neutron/plugins/ml2/ml2_conf.ini
 		XXX
-	# cp /etc/neutron/l3_agent.ini /etc/neutron/l3_agent.ini
+	# cp /etc/neutron/l3_agent.ini /etc/neutron/l3_agent.ini~
 	# vim /etc/neutron/l3_agent.ini
 		XXX
 	# cp /etc/neutron/dhcp_agent.ini /etc/neutron/dhcp_agent.ini~
 	# vim /etc/neutron/dhcp_agent.ini
 		XXX
-	# cp /etc/neutron/dnsmasq-neutron.conf /etc/neutron/dnsmasq-neutron.conf~
 	# vim /etc/neutron/dnsmasq-neutron.conf
 		XXX
 	# pkill dnsmasq
@@ -46,9 +48,9 @@
 	Back to network node
 	# service openvswitch-switch restart
 	# ovs-vsctl add-br br-ex
-	# ovs-vsctl add-port br-ex INTERFACE_NAME
+	!# ovs-vsctl add-port br-ex INTERFACE_NAME
 		INTERFACE_NAME is external network interface on Network node
-	# ethtool -K INTERFACE_NAME gro off
+	!# ethtool -K INTERFACE_NAME gro off
 	# service neutron-plugin-openvswitch-agent restart
 	# service neutron-l3-agent restart
 	# service neutron-dhcp-agent restart
