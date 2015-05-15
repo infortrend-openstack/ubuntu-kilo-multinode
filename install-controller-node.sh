@@ -9,6 +9,10 @@ PASSWORD=111111
 AUTH_TOKEN=7d26b49dd57e0d9ba420
 CONFIG_DIR=controller
 
+export DEBIAN_FRONTEND=noninteractive
+debconf-set-selections <<< 'mariadb-server-5.5 mysql-server/root_password password '$PASSWORD''
+debconf-set-selections <<< 'mariadb-server-5.5 mysql-server/root_password_again password '$PASSWORD''
+
 echo "Start to Install Database"
 sleep 3
 apt-get install -y mariadb-server python-mysqldb
@@ -21,7 +25,7 @@ init-connect = 'SET NAMES utf8'\n\
 character-set-server = utf8" /etc/mysql/my.cnf
 service mysql restart
 sleep 3
-mysql_secure_installation 
+#mysql_secure_installation 
 
 
 echo "Start to Install RabbitMQ"
@@ -193,6 +197,7 @@ neutron ext-list
 echo "Start to Install DashBoard"
 sleep 3
 apt-get install -y openstack-dashboard
+sleep 3
 apt-get remove -y openstack-dashboard-ubuntu-theme
 mv /etc/openstack-dashboard/local_settings.py /etc/openstack-dashboard/local_settings.py~
 cp $CONFIG_DIR/openstack-dashboard/local_settings.py /etc/openstack-dashboard
