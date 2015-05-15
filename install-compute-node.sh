@@ -37,3 +37,4 @@ sleep 3
 service neutron-plugin-openvswitch-agent restart
 sleep 3
 
+exit 0

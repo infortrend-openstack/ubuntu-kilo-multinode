@@ -97,5 +97,4 @@ sleep 3
 service neutron-metadata-agent restart
 sleep 3
 
-	
-	
+exit 0	

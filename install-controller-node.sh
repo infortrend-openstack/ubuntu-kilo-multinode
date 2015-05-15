@@ -202,6 +202,4 @@ sleep 3
 echo "Dashboard: http://controller/horizon"
 echo "user admin or demo to test"
 
-	
-	
-	
+exit 0	
