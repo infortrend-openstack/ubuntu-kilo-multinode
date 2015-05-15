@@ -5,18 +5,46 @@ if [ "$(id -u)" != "0" ]; then
    exit 1
 fi
 
-NET_MGMT_ADDR=20.20.20.1
-CTL_MGMT_ADDR=20.20.20.2
-COM_MGMT_ADDR=20.20.20.3
+############################################
+echo "Please enter [controller-node] external network interface"
+echo "ex: eth0"
+read EXT_NET_INTF_NAME
 
-EXT_NET_INTF_NAME=eth0
-EXT_NET_ADDRESS=172.27.117.102
-EXT_NET_NETMASK=255.255.240.0
-EXT_NET_GATEWAY=172.27.127.254
+echo "Please enter [controller-node] external network IP"
+echo "ex: 172.27.117.102"
+read EXT_NET_ADDRESS
 
-MGNT_NET_INTF_NAME=eth1
-MGNT_NET_ADDRESS=20.20.20.2
-MGNT_NET_NETMASK=255.255.255.0
+echo "Please enter [controller-node] external network netmask"
+echo "ex: 255.255.240.0"
+read EXT_NET_NETMASK
+
+echo "Please enter [controller-node] external network gateway"
+echo "ex: 172.27.127.254"
+read EXT_NET_GATEWAY
+
+############################################
+echo "Please enter [controller-node] management network interface"
+echo "ex: eth1"
+read MGNT_NET_INTF_NAME
+
+echo "Please enter [controller-node] management network IP"
+echo "ex: 20.20.20.2"
+read MGNT_NET_ADDRESS
+
+echo "Please enter [controller-node] management network netmask"
+echo "ex: 255.255.255.0"
+read MGNT_NET_NETMASK
+
+############################################
+echo "Please enter [network-node] management network IP"
+echo "ex: 20.20.20.1"
+read NET_MGMT_ADDR
+
+echo "Please enter [compute-node] management network IP"
+echo "ex: 20.20.20.3"
+read COM_MGMT_ADDR
+
+CTL_MGMT_ADDR=$MGNT_NET_ADDRESS
 
 cp /etc/hosts /etc/hosts~
 sed -i "s/127.0.1.1/#127.0.1.1/g" /etc/hosts

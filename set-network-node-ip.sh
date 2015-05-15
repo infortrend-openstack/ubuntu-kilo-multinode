@@ -5,22 +5,59 @@ if [ "$(id -u)" != "0" ]; then
    exit 1
 fi
 
-NET_MGMT_ADDR=20.20.20.1
-CTL_MGMT_ADDR=20.20.20.2
-COM_MGMT_ADDR=20.20.20.3
+############################################
+echo "Please enter [network-node] external network interface"
+echo "ex: eth0"
+read EXT_NET_INTF_NAME
 
-EXT_NET_INTF_NAME=eth0
-EXT_NET_ADDRESS=172.27.117.101
-EXT_NET_NETMASK=255.255.240.0
-EXT_NET_GATEWAY=172.27.127.254
+echo "Please enter [network-node] external network IP"
+echo "ex: 172.27.117.101"
+read EXT_NET_ADDRESS
 
-MGNT_NET_INTF_NAME=eth1
-MGNT_NET_ADDRESS=20.20.20.1
-MGNT_NET_NETMASK=255.255.255.0
+echo "Please enter [network-node] external network netmask"
+echo "ex: 255.255.240.0"
+read EXT_NET_NETMASK
 
-VM_NET_INTF_NAME=eth2
-VM_NET_ADDRESS=30.30.30.1
-VM_NET_NETMASK=255.255.255.0
+echo "Please enter [network-node] external network gateway"
+echo "ex: 172.27.127.254"
+read EXT_NET_GATEWAY
+
+############################################
+echo "Please enter [network-node] management network interface"
+echo "ex: eth1"
+read MGNT_NET_INTF_NAME
+
+echo "Please enter [network-node] management network IP"
+echo "ex: 20.20.20.1"
+read MGNT_NET_ADDRESS
+
+echo "Please enter [network-node] management network netmask"
+echo "ex: 255.255.255.0"
+read MGNT_NET_NETMASK
+
+############################################
+echo "Please enter [network-node] VM data network interface"
+echo "ex: eth2"
+read VM_NET_INTF_NAME
+
+echo "Please enter [network-node] VM data network IP"
+echo "ex: 30.30.30.1"
+read VM_NET_ADDRESS
+
+echo "Please enter [network-node] VM data network netmask"
+echo "ex: 255.255.255.0"
+read VM_NET_NETMASK
+
+############################################
+echo "Please enter [controller-node] management network IP"
+echo "ex: 20.20.20.2"
+read CTL_MGMT_ADDR
+
+echo "Please enter [compute-node] management network IP"
+echo "ex: 20.20.20.3"
+read COM_MGMT_ADDR
+
+NET_MGMT_ADDR=$MGNT_NET_ADDRESS
 
 cp /etc/hosts /etc/hosts~
 sed -i "s/127.0.1.1/#127.0.1.1/g" /etc/hosts
