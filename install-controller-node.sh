@@ -9,9 +9,6 @@ PASSWORD=111111
 AUTH_TOKEN=7d26b49dd57e0d9ba420
 CONFIG_DIR=controller
 
-
-cd 
-
 echo "Start to Install Database"
 sleep 3
 apt-get install -y mariadb-server python-mysqldb

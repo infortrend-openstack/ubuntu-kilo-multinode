@@ -6,7 +6,6 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 PASSWORD=111111
-
 CONFIG_DIR=network
 
 EXT_NET_INTF_NAME=eth0
