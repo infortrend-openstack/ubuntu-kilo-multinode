@@ -49,6 +49,10 @@ neutron subnet-create private-net 10.10.10.0/24 --name private-subnet --gateway 
 neutron router-create admin-router
 neutron router-interface-add admin-router private-subnet
 neutron router-gateway-set admin-router ext-net
+
+echo "wait 10 seconds to ping router!"
+sleep 10
+
 ping -c 4 $FLOATING_IP_START
 
 echo "Please check network in dashboard is correct!"
