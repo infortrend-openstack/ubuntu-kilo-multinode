@@ -9,7 +9,7 @@ echo "Start to install kilo package!"
 sleep 3
 apt-get install ubuntu-cloud-keyring
 echo "deb http://ubuntu-cloud.archive.canonical.com/ubuntu" "trusty-updates/kilo main" > /etc/apt/sources.list.d/cloudarchive-kilo.list
-apt-get update && apt-get dist-upgrade
+apt-get update && apt-get -y dist-upgrade
 echo "Reboot host"
 sleep 3
 reboot
