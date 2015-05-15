@@ -25,8 +25,8 @@ VM_NET_NETMASK=255.255.255.0
 cp /etc/hosts /etc/hosts~
 sed -i "s/127.0.1.1/#127.0.1.1/g" /etc/hosts
 echo "$NET_MGMT_ADDR      network" >> /etc/hosts
-echo "$CTL_MGMT_ADDR      network" >> /etc/hosts
-echo "$COM_MGMT_ADDR      network" >> /etc/hosts
+echo "$CTL_MGMT_ADDR      controller" >> /etc/hosts
+echo "$COM_MGMT_ADDR      compute" >> /etc/hosts
 
 cp /etc/network/interfaces /etc/network/interfaces~
 cat << EOF > /etc/network/interfaces

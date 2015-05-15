@@ -10,9 +10,9 @@ CTL_MGMT_ADDR=20.20.20.2
 COM_MGMT_ADDR=20.20.20.3
 
 EXT_NET_INTF_NAME=eth0
-EXT_NET_ADDRESS=172.27.117.101
-EXT_NET_NETMASK=255.255.240.0
-EXT_NET_GATEWAY=172.27.127.254
+EXT_NET_ADDRESS=192.168.1.62
+EXT_NET_NETMASK=255.255.255.0
+EXT_NET_GATEWAY=192.168.1.1
 
 MGNT_NET_INTF_NAME=eth1
 MGNT_NET_ADDRESS=20.20.20.1
@@ -25,8 +25,8 @@ VM_NET_NETMASK=255.255.255.0
 cp /etc/hosts /etc/hosts~
 sed -i "s/127.0.1.1/#127.0.1.1/g" /etc/hosts
 echo "$NET_MGMT_ADDR      network" >> /etc/hosts
-echo "$CTL_MGMT_ADDR      network" >> /etc/hosts
-echo "$COM_MGMT_ADDR      network" >> /etc/hosts
+echo "$CTL_MGMT_ADDR      controller" >> /etc/hosts
+echo "$COM_MGMT_ADDR      compute" >> /etc/hosts
 
 cp /etc/network/interfaces /etc/network/interfaces~
 cat << EOF > /etc/network/interfaces
