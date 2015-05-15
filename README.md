@@ -11,13 +11,13 @@ Controller Node
 ===============
 Prepare script repository::
 
-  sudo su
+	sudo su
 
-  apt-get install -y git 
+	apt-get install -y git 
 
-  git clone https://github.com/infortrend-openstack/ubuntu-kilo-multinode.git 
+	git clone https://github.com/infortrend-openstack/ubuntu-kilo-multinode.git 
 
-  cd ubuntu-kilo-multinode/
+	cd ubuntu-kilo-multinode/
 
 
 Check set-controller-node-ip.sh is correct::
