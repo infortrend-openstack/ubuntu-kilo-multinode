@@ -7,6 +7,14 @@ fi
 
 FLOATING_IP_START=172.27.120.200
 FLOATING_IP_END=172.27.120.250
+FLOATING_IP_CIDR=172.27.112.0/20
+
+echo "Enter Floating IP CIDR:(ex:172.27.112.0/20): "
+read FLOATING_IP_CIDR
+if [[ "$FLOATING_IP_CIDR" == "" ]]; then
+    echo "Need to set floating IP CIDR!"
+    exit 0
+fi
 
 echo "Enter Floating IP start:(ex:172.27.120.200): "
 read FLOATING_IP_START
@@ -28,7 +36,7 @@ sleep 3
 source /root/admin-openrc.sh
  
 neutron net-create ext-net --router:external --provider:physical_network external --provider:network_type flat
-neutron subnet-create ext-net 172.27.112.0/20 --name ext-subnet --allocation-pool start=$FLOATING_IP_START,end=$FLOATING_IP_END --disable-dhcp --gateway 172.27.127.254 --dns-nameserver 8.8.8.8
+neutron subnet-create ext-net $FLOATING_IP_CIDR --name ext-subnet --allocation-pool start=$FLOATING_IP_START,end=$FLOATING_IP_END --disable-dhcp --gateway 172.27.127.254 --dns-nameserver 8.8.8.8
 neutron net-create private-net
 neutron subnet-create private-net 10.10.10.0/24 --name private-subnet --gateway 10.10.10.1 --dns-nameserver 8.8.8.8
 neutron router-create admin-router
