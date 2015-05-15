@@ -9,7 +9,7 @@ http://docs.openstack.org/kilo/install-guide/install/apt/openstack-install-guide
 
 Controller Node
 ===============
-Prepare script repository::
+Prepare script repository:
 
 	sudo su
 
@@ -20,77 +20,77 @@ Prepare script repository::
 	cd ubuntu-kilo-multinode/
 
 
-Check set-controller-node-ip.sh is correct::
+Check set-controller-node-ip.sh is correct:
 
-  bash set-controller-node-ip.sh
+	bash set-controller-node-ip.sh
 
 Recheck ip is correct (ifconfig, /etc/hosts, /etc/network/interfaces)
 
-Update cloudarchive package, this script will reboot after installed::
+Update cloudarchive package, this script will reboot after installed:
 
-  bash update-cloudarchive-kilo.sh | tee log-update-cloudarchive-controller
+	bash update-cloudarchive-kilo.sh | tee log-update-cloudarchive-controller
 
-go on install Controller node (RabbitMQ, DB, Keystone, ...)::
+go on install Controller node (RabbitMQ, DB, Keystone, ...):
 
-  bash install-controller-node.sh | tee log-install-controller-node
+	bash install-controller-node.sh | tee log-install-controller-node
 
-after set up 3 node completely, create networking::
+after set up 3 node completely, create networking:
 
-  bash create-initial-network.sh
+	bash create-initial-network.sh
 
 
 Network Node
 ============
 
-prepare script repository::
+prepare script repository:
 
-  sudo su
+	sudo su
 
-  apt-get install -y git 
+	apt-get install -y git 
 
-  git clone https://github.com/infortrend-openstack/ubuntu-kilo-multinode.git 
+	git clone https://github.com/infortrend-openstack/ubuntu-kilo-multinode.git 
 
-  cd ubuntu-kilo-multinode/
+	cd ubuntu-kilo-multinode/
 
-Check set-network-node-ip.sh is correct::
+Check set-network-node-ip.sh is correct:
 
-  bash set-network-node-ip.sh
+	bash set-network-node-ip.sh
 
 Recheck ip is correct (ifconfig, /etc/hosts, /etc/network/interfaces)
 
-update cloudarchive package, this script will reboot after installed::
+update cloudarchive package, this script will reboot after installed:
 
-  bash update-cloudarchive-kilo.sh | tee log-update-cloudarchive-network
+	bash update-cloudarchive-kilo.sh | tee log-update-cloudarchive-network
 
-go on install Network node (Neutron ...)::
+go on install Network node (Neutron ...):
 
-  bash install-network-node.sh | tee log-install-network-node
+	bash install-network-node.sh | tee log-install-network-node
 
 
 
 Compute Node
 ============
-prepare script repository::
+prepare script repository:
 
-  sudo su
+	sudo su
 
-  apt-get install -y git 
+	apt-get install -y git 
 
-  git clone https://github.com/infortrend-openstack/ubuntu-kilo-multinode.git 
+	git clone https://github.com/infortrend-openstack/ubuntu-kilo-multinode.git 
 
-  cd ubuntu-kilo-multinode/
+	cd ubuntu-kilo-multinode/
 
-Check set-compute-node-ip.sh is correct::
+Check set-compute-node-ip.sh is correct:
 
-  bash set-compute-node-ip.sh
+	bash set-compute-node-ip.sh
 
 Recheck ip is correct (ifconfig, /etc/hosts, /etc/network/interfaces)
 
-Update cloudarchive package, this script will reboot after installed::
+Update cloudarchive package, this script will reboot after installed:
 
-  bash update-cloudarchive-kilo.sh | tee log-update-cloudarchive-compute
+	bash update-cloudarchive-kilo.sh | tee log-update-cloudarchive-compute
 
-go on install Compute node (Nova, Neutron ...)::
+go on install Compute node (Nova, Neutron ...):
 
-  bash install-compute-node.sh | tee log-install-compute-node
+	bash install-compute-node.sh | tee log-install-compute-node
 
