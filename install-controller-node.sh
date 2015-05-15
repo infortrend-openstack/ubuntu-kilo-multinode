@@ -9,6 +9,9 @@ PASSWORD=111111
 AUTH_TOKEN=7d26b49dd57e0d9ba420
 CONFIG_DIR=controller
 
+
+cd 
+
 echo "Start to Install Database"
 sleep 3
 apt-get install -y mariadb-server python-mysqldb
@@ -63,7 +66,7 @@ echo "manual" > /etc/init/keystone.override
 apt-get install -y keystone python-openstackclient apache2 libapache2-mod-wsgi memcached python-memcache 
 mv /etc/keystone/keystone.conf /etc/keystone/keystone.conf~
 cp $CONFIG_DIR/keystone/keystone.conf /etc/keystone/
-
+sed -i "s/111111/$PASSWORD/g" /etc/keystone/keystone.conf
 su -s /bin/sh -c "keystone-manage db_sync" keystone
 mv /etc/apache2/apache2.conf /etc/apache2/apache2.conf~
 cp $CONFIG_DIR/apache2/apache2.conf /etc/apache2/
@@ -124,8 +127,10 @@ openstack endpoint create --publicurl http://controller:9292 --internalurl http:
 apt-get install -y glance python-glanceclient
 mv /etc/glance/glance-api.conf /etc/glance/glance-api.conf~
 cp $CONFIG_DIR/glance/glance-api.conf /etc/glance
+sed -i "s/111111/$PASSWORD/g" /etc/glance/glance-api.conf
 mv /etc/glance/glance-registry.conf /etc/glance/glance-registry.conf~
 cp $CONFIG_DIR/glance/glance-registry.conf /etc/glance
+sed -i "s/111111/$PASSWORD/g" /etc/glance/glance-registry.conf
 su -s /bin/sh -c "glance-manage db_sync" glance
 service glance-registry restart
 sleep 3
@@ -150,6 +155,7 @@ openstack endpoint create --publicurl http://controller:8774/v2/%\(tenant_id\)s 
 apt-get install -y nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient
 mv /etc/nova/nova.conf /etc/nova/nova.conf~
 cp $CONFIG_DIR/nova/nova.conf /etc/nova
+sed -i "s/111111/$PASSWORD/g" /etc/nova/nova.conf
 su -s /bin/sh -c "nova-manage db sync" nova
 service nova-api restart
 sleep 3
@@ -177,6 +183,7 @@ openstack endpoint create --publicurl http://controller:9696 --adminurl http://c
 apt-get install -y neutron-server neutron-plugin-ml2 python-neutronclient
 mv /etc/neutron/neutron.conf /etc/neutron/neutron.conf~
 cp $CONFIG_DIR/neutron/neutron.conf /etc/neutron/
+sed -i "s/111111/$PASSWORD/g" /etc/neutron/neutron.conf
 mv /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugins/ml2/ml2_conf.ini~
 cp $CONFIG_DIR/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugins/ml2
 su -s /bin/sh -c "neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head" neutron

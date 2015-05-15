@@ -23,6 +23,9 @@ XXX => means need to modify with manual, you can also check with corresponding d
 	# cp /etc/mysql/conf.d/mysqld_openstack.cnf /etc/mysql/conf.d/mysqld_openstack.cnf~
 	# vim /etc/mysql/conf.d/mysqld_openstack.cnf  
 		XXX
+	# cp /etc/mysql/my.cnf /etc/mysql/my.cnf~
+	# vim /etc/mysql/my.cnf
+		XXX
 	# service mysql restart
 	# mysql_secure_installation 
 		press Y for all selection
@@ -216,7 +219,7 @@ XXX => means need to modify with manual, you can also check with corresponding d
 	
 * create Initial Networking
 	# neutron net-create ext-net --router:external --provider:physical_network external --provider:network_type flat
-	!# neutron subnet-create ext-net 172.27.117.0/20 --name ext-subnet --allocation-pool start=172.27.117.200,end=172.27.117.250 --disable-dhcp --gateway 172.27.127.254 --dns-nameserver 8.8.8.8
+	!# neutron subnet-create ext-net 172.27.112.0/20 --name ext-subnet --allocation-pool start=172.27.117.200,end=172.27.117.250 --disable-dhcp --gateway 172.27.127.254 --dns-nameserver 8.8.8.8
 	Admin private network 
 		=> Do it by Web UI
 	Demo private network (from guide)

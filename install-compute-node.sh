@@ -13,6 +13,7 @@ sleep 3
 apt-get install -y nova-compute sysfsutils
 mv /etc/nova/nova.conf /etc/nova/nova.conf~
 cp $CONFIG_DIR/nova/nova.conf /etc/nova
+sed -i "s/111111/$PASSWORD/g" /etc/nova/nova.conf
 service nova-compute restart
 sleep 3
 rm -f /var/lib/nova/nova.sqlite
