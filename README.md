@@ -20,7 +20,11 @@ Prepare script repository:
 	cd ubuntu-kilo-multinode/
 
 
-Check set-controller-node-ip.sh is correct:
+Check your network topology is right(see [topology](http://tinyurl.com/ldzgx28)), 
+
+Use `ip addr` or `ifconfig` to check your network interface name
+
+Execute setup IP script, it will ask your IP, enter the Mgmt net, Ext net, VM net related to 3 nodes
 
 	bash set-controller-node-ip.sh
 
@@ -30,13 +34,9 @@ Update cloudarchive package, this script will reboot after installed:
 
 	bash update-cloudarchive-kilo.sh | tee log-update-cloudarchive-controller
 
-go on install Controller node (RabbitMQ, DB, Keystone, ...):
+Go on install Controller node (RabbitMQ, DB, Keystone, ...):
 
 	bash install-controller-node.sh | tee log-install-controller-node
-
-after set up 3 node completely, create networking:
-
-	bash create-initial-network.sh
 
 
 Network Node
@@ -52,25 +52,28 @@ prepare script repository:
 
 	cd ubuntu-kilo-multinode/
 
-Check set-network-node-ip.sh is correct:
+Check your network topology is right(see [topology](http://tinyurl.com/ldzgx28)),
+
+Use `ip addr` or `ifconfig` to check your network interface name
+
+Execute setup IP script, it will ask your IP, enter the Mgmt net, Ext net, VM net related to 3 nodes
 
 	bash set-network-node-ip.sh
 
 Recheck ip is correct (ifconfig, /etc/hosts, /etc/network/interfaces)
 
-update cloudarchive package, this script will reboot after installed:
+Update cloudarchive package, this script will reboot after installed:
 
 	bash update-cloudarchive-kilo.sh | tee log-update-cloudarchive-network
 
-go on install Network node (Neutron ...):
+Go on install Network node (Neutron ...):
 
 	bash install-network-node.sh | tee log-install-network-node
 
 
-
 Compute Node
 ============
-prepare script repository:
+Prepare script repository:
 
 	sudo su
 
@@ -80,7 +83,11 @@ prepare script repository:
 
 	cd ubuntu-kilo-multinode/
 
-Check set-compute-node-ip.sh is correct:
+Check your network topology is right(see [topology](http://tinyurl.com/ldzgx28)),
+
+Use `ip addr` or `ifconfig` to check your network interface name
+
+Execute setup IP script, it will ask your IP, enter the Mgmt net, Ext net, VM net related to 3 nodes
 
 	bash set-compute-node-ip.sh
 
@@ -90,7 +97,21 @@ Update cloudarchive package, this script will reboot after installed:
 
 	bash update-cloudarchive-kilo.sh | tee log-update-cloudarchive-compute
 
-go on install Compute node (Nova, Neutron ...):
+Go on install Compute node (Nova, Neutron ...):
 
 	bash install-compute-node.sh | tee log-install-compute-node
+
+
+Next
+====
+
+After set up 3 node completely, reboot the 3 nodes
+
+        reboot
+
+Finally, create networking on controller node, or you can create by yourself :)
+
+        bash create-initial-network.sh
+
+You can launch VM instance now, have fun!
 
