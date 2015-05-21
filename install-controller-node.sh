@@ -194,6 +194,23 @@ service neutron-server restart
 sleep 3 
 neutron ext-list
 
+echo "Start to Install Cinder"
+sleep 3
+openstack user create --password $PASSWORD cinder
+openstack role add --project service --user cinder admin
+openstack service create --type volume --description "OpenStack Block Storage" cinder 
+openstack service create --type volumev2 --description "OpenStack Block Storage" cinderv2
+openstack endpoint create --publicurl http://controller:8776/v2/%\(tenant_id\)s --internalurl http://controller:8776/v2/%\(tenant_id\)s --adminurl http://controller:8776/v2/%\(tenant_id\)s --region RegionOne volume
+openstack endpoint create --publicurl http://controller:8776/v2/%\(tenant_id\)s --internalurl http://controller:8776/v2/%\(tenant_id\)s --adminurl http://controller:8776/v2/%\(tenant_id\)s --region RegionOne volumev2
+apt-get install -y cinder-api cinder-scheduler python-cinderclient
+mv /etc/cinder/cinder.conf /etc/cinder/cinder.conf~
+cp $CONFIG_DIR/cinder/cinder.conf /etc/cinder/
+sed -i "s/111111/$PASSWORD/g" /etc/cinder/cinder.conf
+su -s /bin/sh -c "cinder-manage db sync" cinder
+service cinder-scheduler restart
+service cinder-api restart
+rm -f /var/lib/cinder/cinder.sqlite
+
 echo "Start to Install DashBoard"
 sleep 3
 apt-get install -y openstack-dashboard

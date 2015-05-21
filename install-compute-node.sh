@@ -37,4 +37,14 @@ sleep 3
 service neutron-plugin-openvswitch-agent restart
 sleep 3
 
+
+echo "Start to Install Cinder"
+sleep 3
+apt-get install -y cinder-volume python-mysqldb
+mv /etc/cinder/cinder.conf /etc/cinder/cinder.conf~
+cp $CONFIG_DIR/cinder/cinder.conf /etc/cinder
+service tgt restart
+service cinder-volume restart
+rm -f /var/lib/cinder/cinder.sqlite
+
 exit 0
