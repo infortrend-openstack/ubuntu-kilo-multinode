@@ -47,4 +47,14 @@ service tgt restart
 service cinder-volume restart
 rm -f /var/lib/cinder/cinder.sqlite
 
+echo "Start to Install infortrend related packages"
+sleep 3
+add-apt-repository ppa:webupd8team/java
+apt-get update
+apt-get install -y oracle-java7-installer  
+wget https://github.com/infortrend-openstack/eonstor-ds-cinder-driver/releases/download/v1.0.0-dvt-0.4.0/raidcmd_ESDS10.jar
+mkdir -p /opt/bin/Infortrend/
+mv raidcmd_ESDS10.jar /opt/bin/Infortrend
+apt-get install -y multipath-tools
+
 exit 0
