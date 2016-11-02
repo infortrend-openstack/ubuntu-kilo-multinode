@@ -53,7 +53,7 @@ source /root/admin-openrc
 neutron net-create ext-net --router:external --provider:physical_network external --provider:network_type flat
 neutron subnet-create ext-net $FLOATING_IP_CIDR --name ext-subnet --allocation-pool start=$FLOATING_IP_START,end=$FLOATING_IP_END --disable-dhcp --gateway $FLOATING_IP_GATEWAY --dns-nameserver $DNS_SERVER
 neutron net-create private-net
-neutron subnet-create private-net 10.10.10.0/24 --name private-subnet --gateway 10.10.10.1 --dns-nameserver $DNS_SERVER
+neutron subnet-create private-net 100.100.100.0/24 --name private-subnet --gateway 100.100.100.1 --dns-nameserver $DNS_SERVER
 neutron router-create admin-router
 neutron router-interface-add admin-router private-subnet
 neutron router-gateway-set admin-router ext-net
