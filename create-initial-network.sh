@@ -48,7 +48,7 @@ fi
 echo "Start Create Virtual Network!"
 sleep 3
 
-source /root/admin-openrc.sh
+source /root/admin-openrc
  
 neutron net-create ext-net --router:external --provider:physical_network external --provider:network_type flat
 neutron subnet-create ext-net $FLOATING_IP_CIDR --name ext-subnet --allocation-pool start=$FLOATING_IP_START,end=$FLOATING_IP_END --disable-dhcp --gateway $FLOATING_IP_GATEWAY --dns-nameserver $DNS_SERVER
